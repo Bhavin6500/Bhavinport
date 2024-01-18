@@ -7,6 +7,24 @@ import { FaGithub, FaVideo } from "react-icons/fa"
 import { BiLinkExternal } from "react-icons/bi"
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
+import { useEffect } from 'react';
+import { initializeApp } from 'firebase/app';
+import { getAnalytics, logEvent } from 'firebase/analytics';
+
+const firebaseConfig = {
+  // Your Firebase configuration
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  databaseURL: process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECTID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDERID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APPID,
+  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENTD,
+};
+
+
+
 
 const cardVariants = {
     hidden: { y: 50, opacity: 0 },
@@ -14,6 +32,16 @@ const cardVariants = {
 };
 
 const Project = ({ name, image, category, techstack, links }: project) => {
+ useEffect(() => {
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    logEvent(analytics, 'page_view', {
+    page_title: 'Project',
+  });
+     
+    // Now you have the analytics instance, you can use it in the component
+  }, []); // Empty dependency array ensures the effect runs only once
+
 
     const [ref, inView] = useInView({
         threshold: 0.2,
